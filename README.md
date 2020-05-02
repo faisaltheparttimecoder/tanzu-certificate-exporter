@@ -12,11 +12,11 @@ We have created a dedicated doc on how to setup and install the exporter, please
 
 After running cert-exporter in your cluster it's easy to build a [custom dashboard](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Grafana.json) to expose information about the certs in your cluster. Follow the [guide](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md) on how to set it up.
 
--- Main Dashboard
+##### Main Dashboard
 
 ![home](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Dash1.png)
 
--- Expanded Table
+##### Expanded Table
 
 ![table](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Dash2.png)
 
