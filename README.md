@@ -1,12 +1,12 @@
 # Introduction
 
-The exporter is highly inspired from [cert-exporter by joe-elliott](https://github.com/joe-elliott/cert-exporter), On this specific exporter we take a look at visualization of certificates with respect to cloud foundry.
+On this specific exporter we take a look at visualization of certificates with respect to cloud foundry. The exporter uses the [vmware tanzu operations manager API](https://docs.pivotal.io/platform/2-8/security/pcf-infrastructure/managing-certificates.html) to get the cert information.
 
-This exporter uses the [vmware tanzu operations manager API](https://docs.pivotal.io/platform/2-8/security/pcf-infrastructure/managing-certificates.html) to get the cert information
+**NOTE:** This exporter is highly inspired from [cert-exporter by joe-elliott](https://github.com/joe-elliott/cert-exporter).
 
 # Installation / Usage
 
-We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md) provided on the doc
+We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction provided on the doc](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md)
 
 # Dashboard
 
