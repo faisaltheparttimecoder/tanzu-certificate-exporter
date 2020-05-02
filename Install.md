@@ -36,6 +36,13 @@ cd tanzu-certificate-exporter
 # Open and edit the manifest and provide the values of the env variable.
 vi manifest
 
+# if you are want use https connection b/w API request make sure you set appropriate value in the manifest for
+
+SKIP_SSL_VALIDATION: false
+CACERTFILE: "certificate-file-name"
+
+NOTE: The "certificate-file-name" should be copied and available at the root directory of the app when performing cf push
+
 # push the app to cloud foundry
 cf push
 ```

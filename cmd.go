@@ -22,7 +22,7 @@ type Command struct {
 	OpsManPassword string
 	Interval       int
 	SkipSsl		   bool
-	CACert		   string
+	CACertFile	   string
 }
 
 // Defaults
@@ -73,6 +73,9 @@ func setDefaultsOrErrorIfMissing() {
 	if cmdOptions.Environment == "" { // environment
 		Fatalf("Environment %s", suffixText)
 	}
+	if !cmdOptions.SkipSsl && cmdOptions.CACertFile == "" { // ca cert file is missing
+		Fatalf("CA cert file parameter %s", suffixText)
+	}
 	if cmdOptions.OpsManHostname != "" { // validate ops man URL
 		u, err := url.ParseRequestURI(cmdOptions.OpsManHostname)
 		if err != nil {
@@ -108,4 +111,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.Environment, "environment", "e",
 		viper.GetString("ENVIRONMENT"),
 		"(required) provide the environment name for this foundation. Environment Variable: ENVIRONMENT")
+	rootCmd.PersistentFlags().StringVarP(&cmdOptions.CACertFile, "ca-cert-file", "c",
+		viper.GetString("CACERTFILE"),
+		"provide the environment name for this foundation. Environment Variable: CACERTFILE")
 }
