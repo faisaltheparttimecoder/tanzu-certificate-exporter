@@ -4,13 +4,13 @@ The exporter is highly inspired from [cert-exporter by joe-elliott](https://gith
 
 This exporter uses the [vmware tanzu operations manager API](https://docs.pivotal.io/platform/2-8/security/pcf-infrastructure/managing-certificates.html) to get the cert information
 
-# Usage and Installation
+# Installation / Usage
 
-We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/install.md) provided on the doc
+We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md) provided on the doc
 
 # Dashboard
 
-After running cert-exporter in your cluster it's easy to build a [custom dashboard](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Grafana.json) to expose information about the certs in your cluster. 
+After running cert-exporter in your cluster it's easy to build a [custom dashboard](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Grafana.json) to expose information about the certs in your cluster. Follow the [guide](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md) on how to set it up.
 
 -- Main Dashboard
 

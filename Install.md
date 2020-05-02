@@ -42,7 +42,7 @@ cf push
 
 ### 3. Register the route with prometheus 
 
-###### Using [prometheus-boshrelease](https://github.com/bosh-prometheus/prometheus-boshrelease) release
+#### Using [prometheus-boshrelease](https://github.com/bosh-prometheus/prometheus-boshrelease) release
 
 if you are using prometheus which is part of the [prometheus-boshrelease](https://github.com/bosh-prometheus/prometheus-boshrelease) then in order to register the route.
 
@@ -119,7 +119,7 @@ all the bosh operator when you deployed this during the first time.
 "cert_exporter_cert_expires_in_seconds"
 ```
 
-###### Using your own prometheus
+#### Using your own prometheus
 
 If you are managing your own prometheus in-house, then follow the below steps
 
