@@ -1,0 +1,17 @@
+---
+applications:
+- name: cert-exporter
+  memory: 512M
+  disk_quota: 256M
+  instances: 1
+  buildpacks: [https://github.com/cloudfoundry/go-buildpack.git]
+  env:
+    GOVERSION: go1.13
+    GOPACKAGENAME: bin/cert-exporter
+    DEBUG: false                                          # Enable for debug loggin
+    SKIP_SSL_VALIDATION: true                             # Skip SSL Validation
+    INTERVAL: 3600                                        # Time interval in seconds after which it refresh the cache
+    OPSMAN_URL: https://<OPSMAN-URL>/                     # The URL of the ops manager
+    OPSMAN_USERNAME: prometheus-cert-exporter             # Read only username that can read the opsman API
+    OPSMAN_PASSWORD: prometheus-cert-exporter-password    # Password to access the opsman API
+    ENVIRONMENT: env10                                    # Arbitrary name to identify the env
