@@ -35,9 +35,9 @@ func fetch(method string, url string, headers map[string]string) ([]byte, error)
 			InsecureSkipVerify: true,
 		}
 	} else { // add CA if provided
-		cert, err := ioutil.ReadFile("server.crt")
+		cert, err := ioutil.ReadFile(cmdOptions.CACertFile)
 		if err != nil {
-			Fatalf("Couldn't load file: %v", err)
+			Fatalf("Couldn't load certificate file: %v", err)
 		}
 		certPool := x509.NewCertPool()
 		certPool.AppendCertsFromPEM(cert)
