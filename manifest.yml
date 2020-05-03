@@ -10,9 +10,9 @@ applications:
     GOPACKAGENAME: bin/cert-exporter
     DEBUG: false                                          # Enable for debug loggin
     INTERVAL: 3600                                        # Time interval in seconds after which it refresh the cache
-    OPSMAN_URL: https://<OPSMAN-URL>/                     # The URL of the ops manager
+    OPSMAN_URL: https://opsmgr-09.haas-59.pez.pivotal.io/                     # The URL of the ops manager
     OPSMAN_USERNAME: prometheus-cert-exporter             # Read only username that can read the opsman API
     OPSMAN_PASSWORD: prometheus-cert-exporter-password    # Password to access the opsman API
-    ENVIRONMENT: env10                                    # Arbitrary name to identify the env
+    ENVIRONMENT: lab09                                    # Arbitrary name to identify the env
     SKIP_SSL_VALIDATION: true                             # Skip SSL Validation
     CACERTFILE:  "server.crt"                             # CA Cert Filename to connect to the above OPSMAN_URL, the file should on the root directory when doing cf PUSH
