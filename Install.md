@@ -45,9 +45,17 @@ NOTE: The "certificate-file-name" should be copied and available at the root dir
 
 # push the app to cloud foundry
 cf push
+
+# Note down the route for the app for later use
 ```
 
-### 3. Register the route with prometheus 
+### 3. Repeat
+
+Repeat the step 1 to 2 for additional foundation you would like to monitor. 
+
+### 4. Register the route with prometheus 
+
+**NOTE:** These step will restart the prometheus agent and might result in a downtime.
 
 #### Using [prometheus-boshrelease](https://github.com/bosh-prometheus/prometheus-boshrelease) release
 
@@ -58,8 +66,8 @@ if you are using prometheus which is part of the [prometheus-boshrelease](https:
 vi manifests/prometheus.yml
 
 # Add in additional jobs under scrape config i.e under the section jobs > properties > prometheus > scrape_configs
-
-# Say my cert exporter route is "cert-exporter.domain.com", my basic scrape config would be something like this
+Say my cert exporter route is "cert-exporter.domain1.com, cert-exporter.domain2.com, etc" obtained frrom step 2 above, 
+my basic scrape config would be something like this
 
 scrape_configs:
 - file_sd_configs:
@@ -76,13 +84,15 @@ scrape_configs:
     source_labels:
     - __address__
     target_label: __address__
-- job_name: env10
+- job_name: cert-exporter
   static_configs:
   - targets:
-    - cert-exporter.domain.com
+    - cert-exporter.domain1.com
+    - cert-exporter.domain2.com
 ......
 
-# Save the file and update the deployment
+Save the file and update the deployment
+
 bosh -d prometheus deploy manifests/prometheus.yml --vars-store tmp/deployment-vars.yml
   
 if you are using additional operator please don't forget to include them like eg.s below, 
@@ -104,7 +114,7 @@ bosh -d prometheus deploy manifests/prometheus.yml \
     -v traffic_controller_external_port= \
     -v skip_ssl_verify=
     
-# Ensure before confirming that the deployment is only updating the changes implemented above and nothing else, 
+Ensure before confirming that the deployment is only updating the changes implemented above and nothing else, 
   eg.s below show the deployment is only going to publish our changes.
 
   instance_groups:
@@ -120,7 +130,7 @@ bosh -d prometheus deploy manifests/prometheus.yml \
 +             - "<redacted>"
 
 in case you find many variables being modified cancel the deployment during confirmation and ensure you have included 
-all the bosh operator when you deployed this during the first time.
+all the bosh operator when you deployed this release the last time or continue if you are comfortable
 
 # If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from 
 "cert_exporter_cert_expires_in_seconds"
@@ -142,18 +152,17 @@ scrape_configs:
     static_configs:
     - targets: ['127.0.0.1:9090']
 
-  - job_name: 'env10'
+  - job_name: 'cert_exporter'
     static_configs:
-    - targets: ['cert-exporter.domain.com']
+    - targets: 
+      - cert-exporter.domain1.com
+      - cert-exporter.domain2.com
+ 
+# Restart the prometheus to reload the configuration
     
 # If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from 
 "cert_exporter_cert_expires_in_seconds"
 ```
-
-
-### 4. Repeat
-
-Repeat the step 1 to 3 for additional foundation you would like to monitor. 
 
 ### 5. Register the Grafana dashboard
 
