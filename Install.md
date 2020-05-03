@@ -46,6 +46,7 @@ NOTE: The "certificate-file-name" should be copied and available at the root dir
 # push the app to cloud foundry
 cf push
 
+# You can verify if metric is being emitted by adding the path "/metrics" to the URL
 # Note down the route for the app for later use
 ```
 

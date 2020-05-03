@@ -21,14 +21,23 @@ type Command struct {
 	OpsManUsername string
 	OpsManPassword string
 	Interval       int
-	SkipSsl		   bool
-	CACertFile	   string
+	SkipSsl        bool
+	CACertFile     string
 }
 
 // Defaults
 const (
-	defaultInterval = 86400 // 1 day
-	defaultPort     = 8080
+	defaultInterval   = 86400 // 1 day
+	defaultPort       = 8080
+	envDebug          = "DEBUG"
+	envSslSkip        = "SKIP_SSL_VALIDATION"
+	envInterval       = "INTERVAL"
+	envPort           = "PORT"
+	envOpsManUrl      = "OPSMAN_URL"
+	envOpsManUserName = "OPSMAN_USERNAME"
+	envOpsManPassword = "OPSMAN_PASSWORD"
+	envEnvironment    = "ENVIRONMENT"
+	envCaCertFile     = "CACERTFILE"
 )
 
 // The root commands.
@@ -92,26 +101,26 @@ func init() {
 
 	// Root command flags
 	rootCmd.PersistentFlags().BoolVarP(&cmdOptions.Debug, "debug", "d",
-		viper.GetBool("DEBUG"), "enable verbose or debug logging. Environment Variable: DEBUG")
+		viper.GetBool(envDebug), "enable verbose or debug logging. Environment Variable: "+envDebug)
 	rootCmd.PersistentFlags().BoolVarP(&cmdOptions.SkipSsl, "skip-ssl-validation", "k",
-		viper.GetBool("SKIP_SSL_VALIDATION"), "skip validating certificate. Environment Variable: SKIP_SSL_VALIDATION")
+		viper.GetBool(envSslSkip), "skip validating certificate. Environment Variable: "+envSslSkip)
 	rootCmd.PersistentFlags().IntVarP(&cmdOptions.Interval, "interval", "i",
-		viper.GetInt("INTERVAL"), "scrapping interval in seconds. Environment Variable: INTERVAL")
+		viper.GetInt(envInterval), "scrapping interval in seconds. Environment Variable: "+envInterval)
 	rootCmd.PersistentFlags().IntVarP(&cmdOptions.Port, "port", "p",
-		viper.GetInt("PORT"), "port number to start the web server. Environment Variable: PORT")
+		viper.GetInt(envPort), "port number to start the web server. Environment Variable: "+envPort)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.OpsManHostname, "opsman-address", "a",
-		viper.GetString("OPSMAN_URL"),
-		"(required) provide the hostname or IP address of the ops manager url. Environment Variable: OPSMAN_URL")
+		viper.GetString(envOpsManUrl),
+		"[required] provide the hostname or IP address of the ops manager url. Environment Variable: "+envOpsManUrl)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.OpsManUsername, "opsman-username", "u",
-		viper.GetString("OPSMAN_USERNAME"),
-		"(required) provide the username to connect to ops manager. Environment Variable: OPSMAN_USERNAME")
+		viper.GetString(envOpsManUserName),
+		"[required] provide the username to connect to ops manager. Environment Variable: "+envOpsManUserName)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.OpsManPassword, "opsman-password", "w",
-		viper.GetString("OPSMAN_PASSWORD"),
-		"(required) provide the password to connect to ops manager. Environment Variable: OPSMAN_PASSWORD")
+		viper.GetString(envOpsManPassword),
+		"[required] provide the password to connect to ops manager. Environment Variable: "+envOpsManPassword)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.Environment, "environment", "e",
-		viper.GetString("ENVIRONMENT"),
-		"(required) provide the environment name for this foundation. Environment Variable: ENVIRONMENT")
+		viper.GetString(envEnvironment),
+		"[required] provide the environment name for this foundation. Environment Variable: "+envEnvironment)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.CACertFile, "ca-cert-file", "c",
-		viper.GetString("CACERTFILE"),
-		"provide the environment name for this foundation. Environment Variable: CACERTFILE")
+		viper.GetString(envCaCertFile),
+		"[required if skip ssl is false] provide the environment name for this foundation. Environment Variable: "+envCaCertFile)
 }
