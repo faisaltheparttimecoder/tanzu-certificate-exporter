@@ -5,7 +5,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-const namespace = "cert_exporter"
+const namespace = "vmware_tanzu_cert_exporter"
 
 var (
 	// ErrorTotal is a prometheus counter that indicates the total number of unexpected errors encountered by the program

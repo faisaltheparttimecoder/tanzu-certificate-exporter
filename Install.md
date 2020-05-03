@@ -67,7 +67,7 @@ if you are using prometheus which is part of the [prometheus-boshrelease](https:
 vi manifests/prometheus.yml
 
 # Add in additional jobs under scrape config i.e under the section jobs > properties > prometheus > scrape_configs
-Say my cert exporter route is "cert-exporter.domain1.com, cert-exporter.domain2.com, etc" obtained frrom step 2 above, 
+Say my cert exporter route is "vmware-tanzu-cert-exporter.domain1.com, vmware-tanzu-cert-exporter.domain2.com, etc" obtained frrom step 2 above, 
 my basic scrape config would be something like this
 
 scrape_configs:
@@ -85,11 +85,11 @@ scrape_configs:
     source_labels:
     - __address__
     target_label: __address__
-- job_name: cert-exporter
+- job_name: vmware-tanzu-cert-exporter
   static_configs:
   - targets:
-    - cert-exporter.domain1.com
-    - cert-exporter.domain2.com
+    - vmware-tanzu-cert-exporter.domain1.com
+    - vmware-tanzu-cert-exporter.domain2.com
 ......
 
 Save the file and update the deployment
@@ -134,7 +134,7 @@ in case you find many variables being modified cancel the deployment during conf
 all the bosh operator when you deployed this release the last time or continue if you are comfortable
 
 # If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from 
-"cert_exporter_cert_expires_in_seconds"
+"vmware_tanzu_cert_exporter_cert_expires_in_seconds"
 ```
 
 #### Using your own prometheus
@@ -153,16 +153,16 @@ scrape_configs:
     static_configs:
     - targets: ['127.0.0.1:9090']
 
-  - job_name: 'cert_exporter'
+  - job_name: 'vmware_tanzu_cert_exporter'
     static_configs:
     - targets: 
-      - cert-exporter.domain1.com
-      - cert-exporter.domain2.com
+      - vmware-tanzu-cert-exporter.domain1.com
+      - vmware-tanzu-cert-exporter.domain2.com
  
 # Restart the prometheus to reload the configuration
     
 # If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from 
-"cert_exporter_cert_expires_in_seconds"
+"vmware_tanzu_cert_exporter_cert_expires_in_seconds"
 ```
 
 ### 5. Register the Grafana dashboard

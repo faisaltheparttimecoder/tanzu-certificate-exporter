@@ -1,4 +1,4 @@
-module github.com/faisall/pcf-cert-exporter
+module github.com/pivotal-gss/tanzu-certificate-exporter
 
 go 1.13
 

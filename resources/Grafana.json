@@ -85,7 +85,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "count(cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} <= 15724800) OR on() vector(0)",
+          "expr": "count(vmware_tanzu_cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} <= 15724800) OR on() vector(0)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -167,7 +167,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "count(15724800 < cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} and cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} <= 31536000) OR on() vector(0)",
+          "expr": "count(15724800 < vmware_tanzu_cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} and vmware_tanzu_cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} <= 31536000) OR on() vector(0)",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -250,7 +250,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "count(cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} > 31536000) OR on() vector(0)",
+          "expr": "count(vmware_tanzu_cert_exporter_cert_expires_in_seconds{env=~\"$Environment\"} > 31536000) OR on() vector(0)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -331,7 +331,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(cert_exporter_error_total{env=~\"$Environment\"})",
+          "expr": "sum(vmware_tanzu_cert_exporter_error_total{env=~\"$Environment\"})",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -401,7 +401,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(cert_exporter_error_total{env=~\"$Environment\"}[1h])",
+          "expr": "rate(vmware_tanzu_cert_exporter_error_total{env=~\"$Environment\"}[1h])",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -516,7 +516,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "count(cert_exporter_cert_expires_in_seconds{location=\"ops_manager\", env=~\"$Environment\"})",
+          "expr": "count(vmware_tanzu_cert_exporter_cert_expires_in_seconds{location=\"ops_manager\", env=~\"$Environment\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -644,7 +644,7 @@
       ],
       "targets": [
         {
-          "expr": "cert_exporter_cert_expires_in_seconds{location=~\"ops_manager\", env=~\"$Environment\"}",
+          "expr": "vmware_tanzu_cert_exporter_cert_expires_in_seconds{location=~\"ops_manager\", env=~\"$Environment\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -724,7 +724,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "count(cert_exporter_cert_expires_in_seconds{location=\"credhub\", env=~\"$Environment\"})",
+          "expr": "count(vmware_tanzu_cert_exporter_cert_expires_in_seconds{location=\"credhub\", env=~\"$Environment\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -830,7 +830,7 @@
       ],
       "targets": [
         {
-          "expr": "cert_exporter_cert_expires_in_seconds{location=~\"credhub\", env=~\"$Environment\"}",
+          "expr": "vmware_tanzu_cert_exporter_cert_expires_in_seconds{location=~\"credhub\", env=~\"$Environment\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -862,7 +862,7 @@
           "value": "$__all"
         },
         "datasource": "prometheus",
-        "definition": "cert_exporter_cert_expires_in_seconds",
+        "definition": "vmware_tanzu_cert_exporter_cert_expires_in_seconds",
         "hide": 0,
         "includeAll": true,
         "index": -1,
@@ -870,7 +870,7 @@
         "multi": false,
         "name": "Environment",
         "options": [],
-        "query": "cert_exporter_cert_expires_in_seconds",
+        "query": "vmware_tanzu_cert_exporter_cert_expires_in_seconds",
         "refresh": 1,
         "regex": ".*env=\"([^\"]*).*",
         "skipUrlSync": false,

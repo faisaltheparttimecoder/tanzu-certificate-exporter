@@ -9,7 +9,7 @@ import (
 
 const (
 	programVersion = "0.1"
-	programName    = "cert-exporter"
+	programName    = "vmware-tanzu-cert-exporter"
 	metricURL      = "/metrics"
 )
 

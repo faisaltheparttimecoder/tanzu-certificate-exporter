@@ -37,7 +37,7 @@ This guide helps with set of instruction on how you run this code locally on you
         static_configs:
         - targets: ['127.0.0.1:9090']
     
-      - job_name: 'cert-exporter-env10'
+      - job_name: 'vmware-tanzu-cert-exporter'
         metrics_path: '/metrics'
         static_configs:
         - targets: ['<HOST-IP>:8080']
