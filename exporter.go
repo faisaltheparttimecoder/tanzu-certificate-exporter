@@ -22,6 +22,8 @@ func startCertificateMonitoring() {
 			m.collector()
 			// Sleep for the next interval to scrap again
 			time.Sleep(time.Duration(cmdOptions.Interval) * time.Second)
+			// Reset the cache
+			ResetMetrics()
 		}
 	}()
 }
@@ -32,7 +34,12 @@ func startHttpServer() {
 	startCertificateMonitoring()
 
 	// Listen and serve prometheus request
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		fmt.Fprintf(w, "Hello Welcome, <br/> You can view the metrics <a href=\"%s\">here</a>", metricURL)
+	})
 	http.Handle(metricURL, promhttp.Handler())
+
 	Infof("Starting server on port %d, serving data at path %s", cmdOptions.Port, metricURL)
 	http.ListenAndServe(fmt.Sprintf(":%d", cmdOptions.Port), nil)
 }

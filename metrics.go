@@ -8,6 +8,19 @@ import (
 const namespace = "vmware_tanzu_cert_exporter"
 
 var (
+	ErrorTotal *prometheus.CounterVec
+	CertExpirySeconds *prometheus.GaugeVec
+	CertExpiryUnixTimestamp *prometheus.GaugeVec
+)
+
+func init() {
+	ResetMetrics()
+	prometheus.MustRegister(ErrorTotal)
+	prometheus.MustRegister(CertExpirySeconds)
+	prometheus.MustRegister(CertExpiryUnixTimestamp)
+}
+
+func ResetMetrics() {
 	// ErrorTotal is a prometheus counter that indicates the total number of unexpected errors encountered by the program
 	ErrorTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -17,7 +30,6 @@ var (
 		},
 		[]string{"env"},
 	)
-
 	// CertExpirySeconds is a prometheus gauge that indicates the number of seconds until certificates on disk expires.
 	CertExpirySeconds = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
@@ -28,7 +40,6 @@ var (
 		[]string{"env", "is_ca", "configurable", "property_reference", "product_guid",
 			"location", "variable_path", "issuer", "valid_from", "valid_until"},
 	)
-
 	// CertExpiryUnixTimestamp is a prometheus gauge that indicates the time in unix timestamp format.
 	CertExpiryUnixTimestamp = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
@@ -39,10 +50,4 @@ var (
 		[]string{"env", "is_ca", "configurable", "property_reference", "product_guid",
 			"location", "variable_path", "issuer", "valid_from", "valid_until"},
 	)
-)
-
-func init() {
-	prometheus.MustRegister(ErrorTotal)
-	prometheus.MustRegister(CertExpirySeconds)
-	prometheus.MustRegister(CertExpiryUnixTimestamp)
 }
