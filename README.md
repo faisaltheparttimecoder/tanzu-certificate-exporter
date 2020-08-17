@@ -6,19 +6,19 @@ On this specific exporter we take a look at visualization of certificates with r
 
 # Installation / Usage
 
-We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction provided on the doc](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md) that include both Cloud Foundry and Kubernetes deployments.
+We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction provided on the doc](Install.md) that include both Cloud Foundry and Kubernetes deployments.
 
 # Dashboard
 
-After running vmware-tanzu-cert-exporter in your cluster it's easy to build a [custom dashboard](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Grafana.json) to expose information about the certs in your cluster. Follow the [guide](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md) on how to set it up.
+After running vmware-tanzu-cert-exporter in your cluster it's easy to build a [custom dashboard](resources/Grafana.json) to expose information about the certs in your cluster. Follow the [guide](./Install.md) on how to set it up.
 
 ##### Main Dashboard
 
-![home](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Dash1.png)
+![home](resources/Dash1.png)
 
 ##### Expanded Table
 
-![table](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Dash2.png)
+![table](resources/Dash2.png)
 
 # Exported Metrics
 
@@ -45,4 +45,4 @@ where
 
 # Customizing / Developing
 
-If you wish to customize the code, follow the instruction as per the [doc](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/LocalSetup.md)
+If you wish to customize the code, follow the instruction as per the [doc](LocalSetup.md)
