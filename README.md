@@ -6,7 +6,7 @@ On this specific exporter we take a look at visualization of certificates with r
 
 # Installation / Usage
 
-We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction provided on the doc](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md)
+We have created a dedicated doc on how to setup and install the exporter, please check out the [set of instruction provided on the doc](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/Install.md) that include both Cloud Foundry and Kubernetes deployments.
 
 # Dashboard
 
@@ -33,16 +33,16 @@ vmware_tanzu_cert_exporter_cert_expires_in_seconds{configurable="false",env="env
 vmware_tanzu_cert_exporter_error_total 0
 ```
 
-where 
- 
+where
+
 + **vmware_tanzu_cert_exporter_error_total**
 
   The total number of unexpected errors encountered by vmware-tanzu-cert-exporter. A good metric to watch to feel comfortable certs are being exported properly.
-  
+
 + **vmware_tanzu_cert_exporter_cert_expires_in_seconds**
-  
+
   The number of seconds until a certificate stored in the PEM format is expired. The property reference, path and issuer label indicates the exported cert.
-  
+
 # Customizing / Developing
 
 If you wish to customize the code, follow the instruction as per the [doc](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/LocalSetup.md)

@@ -1,0 +1,68 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: tanzu-certificate-exporter
+  labels:
+    app: tanzu-certificate-exporter
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+  selector:
+    app: tanzu-certificate-exporter
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tanzu-certificate-exporter
+  labels:
+    app: tanzu-certificate-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tanzu-certificate-exporter
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: tanzu-certificate-exporter
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: tanzu-certificate-exporter
+          image: "oahcran/tanzu-certificate-exporter:20200812"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OPSMAN_URL
+              value: https://opsman.lab.example.com/
+            - name: SKIP_SSL_VALIDATION
+              value: "true"
+            - name: ENVIRONMENT
+              value: "lab1"
+            - name: OPSMAN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ops-manager-secret
+                  key: username
+            - name: OPSMAN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ops-manager-secret
+                  key: password
+
+          resources:
+            limits:
+              cpu: 400m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          ports:
+            - containerPort: 8080
+              name: http
