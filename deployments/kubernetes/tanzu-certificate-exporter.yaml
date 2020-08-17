@@ -33,7 +33,6 @@ spec:
       labels:
         app: tanzu-certificate-exporter
     spec:
-      serviceAccountName: default
       containers:
         - name: tanzu-certificate-exporter
           image: "oahcran/tanzu-certificate-exporter:20200812"
