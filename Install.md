@@ -2,16 +2,21 @@
 
 The guide help you to provide step by step instruction on setting up certificate exporter.
 
-# Instructions
+* Ops Manager UAA User Setup
+* Deployment to Cloud Foundry `cf push`
+* Deployment to Kubernetes
+* Prometheus Setup
+* Grafana Dashboard
+* Multiple Foundations Support
 
-### 1. Setup the uaa user.
+## Ops Manager UAA User Setup
 
-In order to connect and access the Ops Manager API for extracting all the certificates a minimum of readonly uaa username 
+In order to connect and access the Ops Manager API for extracting all the certificates a minimum of readonly uaa username
 and password must be provided, i.e the username must have minimum `opsman.restricted_view` privilege.
 
 Here is a quick step to create a read only API user.
 
-For more information on creating users on Ops Manager checkout the [documentation](https://docs.pivotal.io/pivotalcf/2-6/customizing/opsman-users.html) and check 
+For more information on creating users on Ops Manager checkout the [documentation](https://docs.pivotal.io/pivotalcf/2-6/customizing/opsman-users.html) and check
 this [documentation](https://docs.pivotal.io/pivotalcf/2-6/opsguide/config-rbac.html) for different role based access control available.
 
 ```
@@ -24,7 +29,7 @@ uaac user add prometheus-cert-exporter -p prometheus-cert-exporter-password --em
 uaac member add opsman.restricted_view prometheus-cert-exporter
 ```
 
-### 2. Manifest and CF Push
+## Deployment to Cloud Foundry
 
 Push the code to cloud foundry
 
@@ -50,15 +55,23 @@ cf push
 # Note down the route for the app for later use
 ```
 
-### 3. Repeat
+## Deployment to Kubernetes
 
-Repeat the step 1 to 2 for additional foundation you would like to monitor. 
++ Use the [Dockerfile](./Dockerfile)
++ Create the Kubernetes secret for Ops Manager API username and password
++ Update the [deployment yaml](deployments/kubernetes/tanzu-certificate-exporter.yaml) environment variables and service type (ClusterIP vs LoadBalancer)
++ Add into Prometheus target
 
-### 4. Register the route with prometheus 
+```
+kubectl create secret generic ops-manager-secret --from-literal=username=admin --from-literal=password='<password>'
+kubectl apply -f tanzu-certificate-exporter.yaml
+```
+
+## Prometheus Setup
 
 **NOTE:** These step will restart the prometheus agent and might result in a downtime.
 
-#### Using [prometheus-boshrelease](https://github.com/bosh-prometheus/prometheus-boshrelease) release
+### Option 1: Using [prometheus-boshrelease](https://github.com/bosh-prometheus/prometheus-boshrelease) release
 
 if you are using prometheus which is part of the [prometheus-boshrelease](https://github.com/bosh-prometheus/prometheus-boshrelease) then in order to register the route.
 
@@ -67,7 +80,7 @@ if you are using prometheus which is part of the [prometheus-boshrelease](https:
 vi manifests/prometheus.yml
 
 # Add in additional jobs under scrape config i.e under the section jobs > properties > prometheus > scrape_configs
-Say my cert exporter route is "vmware-tanzu-cert-exporter.domain1.com, vmware-tanzu-cert-exporter.domain2.com, etc" obtained frrom step 2 above, 
+Say my cert exporter route is "vmware-tanzu-cert-exporter.domain1.com, vmware-tanzu-cert-exporter.domain2.com, etc" obtained frrom step 2 above,
 my basic scrape config would be something like this
 
 scrape_configs:
@@ -95,8 +108,8 @@ scrape_configs:
 Save the file and update the deployment
 
 bosh -d prometheus deploy manifests/prometheus.yml --vars-store tmp/deployment-vars.yml
-  
-if you are using additional operator please don't forget to include them like eg.s below, 
+
+if you are using additional operator please don't forget to include them like eg.s below,
 check the prometheus-boshrelease for more information on it
 
 bosh -d prometheus deploy manifests/prometheus.yml \
@@ -114,8 +127,8 @@ bosh -d prometheus deploy manifests/prometheus.yml \
     -v uaa_clients_firehose_exporter_secret= \
     -v traffic_controller_external_port= \
     -v skip_ssl_verify=
-    
-Ensure before confirming that the deployment is only updating the changes implemented above and nothing else, 
+
+Ensure before confirming that the deployment is only updating the changes implemented above and nothing else,
   eg.s below show the deployment is only going to publish our changes.
 
   instance_groups:
@@ -130,14 +143,14 @@ Ensure before confirming that the deployment is only updating the changes implem
 +           - targets:
 +             - "<redacted>"
 
-in case you find many variables being modified cancel the deployment during confirmation and ensure you have included 
+in case you find many variables being modified cancel the deployment during confirmation and ensure you have included
 all the bosh operator when you deployed this release the last time or continue if you are comfortable
 
-# If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from 
+# If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from
 "vmware_tanzu_cert_exporter_cert_expires_in_seconds"
 ```
 
-#### Using your own prometheus
+### Option 2: Bring Your Own Prometheus
 
 If you are managing your own prometheus in-house, then follow the below steps
 
@@ -155,17 +168,17 @@ scrape_configs:
 
   - job_name: 'vmware_tanzu_cert_exporter'
     static_configs:
-    - targets: 
+    - targets:
       - vmware-tanzu-cert-exporter.domain1.com
       - vmware-tanzu-cert-exporter.domain2.com
- 
+
 # Restart the prometheus to reload the configuration
-    
-# If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from 
+
+# If deployment had successfully completed, the connect to prometheus GUI and see if you can find in metrics from
 "vmware_tanzu_cert_exporter_cert_expires_in_seconds"
 ```
 
-### 5. Register the Grafana dashboard
+## Grafana Dashboard
 
 Once the prometheus scraping is setup, navigate to Grafana UI to setup the dashboard.
 
@@ -174,3 +187,7 @@ Once the prometheus scraping is setup, navigate to Grafana UI to setup the dashb
 + Open and copy the content from [Grafana.Json](https://github.com/pivotal-gss/tanzu-certificate-exporter/blob/master/resources/Grafana.json)
 + Paste the Json onto the Grafana Import Page and click on Load
 + Correct any error if found, once satisfied click on import.
+
+## Multiple Foundations Support
+
+Repeat the steps listed in this document for additional foundation you would like to monitor. Use environment variable `ENVIRONMENT` to differentiate the foundation when starting the exporter
