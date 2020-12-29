@@ -1,3 +1,4 @@
 .idea
 prometheus.yml
 resources/.*
+run_dev.sh
