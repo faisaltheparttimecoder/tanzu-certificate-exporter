@@ -13,6 +13,10 @@ This guide helps with set of instruction on how you run this code locally on you
   git clone https://github.com/pivotal-gss/tanzu-certificate-exporter.git
   cd tanzu-certificate-exporter
   ```
++ Download Dependencies
+  ```
+  go mod vendor
+  ```
 + Start your local web server of the code
   ```
   go run *.go -a https://<OPSMAN-URL>/ -u prometheus-cert-exporter -w prometheus-cert-exporter-password -e env10 -i 30 -k -p 8080

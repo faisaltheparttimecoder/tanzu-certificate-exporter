@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -50,7 +51,7 @@ func fetch(method string, url string, headers map[string]string) ([]byte, error)
 	// perform request
 	client := &http.Client{
 		Transport: transport,
-		Timeout: 30 * time.Second,
+		Timeout:   30 * time.Second,
 	}
 	resp, err := client.Do(request)
 	if err != nil {
@@ -77,6 +78,11 @@ func get(url string, headers map[string]string) ([]byte, error) {
 	return fetch("GET", url, headers)
 }
 
+// the below function does the POST from the URL
+func post(url string, headers map[string]string) ([]byte, error) {
+	return fetch("POST", url, headers)
+}
+
 // Extract the access token from ops man
 func (m *MetricsCollector) authenticate() error {
 	Debugf("Extracting the access token for the ops manager: %s", cmdOptions.OpsManHostname)
@@ -87,20 +93,31 @@ func (m *MetricsCollector) authenticate() error {
 		return IncrementErrorCounter(fmt.Sprintf("error in parsing authentication url: %v", err))
 	}
 
-	// Add Parameter values for URL for authentication
+	// parameters
 	parameters := url.Values{}
-	parameters.Add("grant_type", "password")
-	parameters.Add("username", cmdOptions.OpsManUsername)
-	parameters.Add("password", cmdOptions.OpsManPassword)
-	URL.RawQuery = parameters.Encode()
-
-	// Headers.
 	headers := make(map[string]string)
 	headers["Accept"] = "application/json;charset=utf-8"
-	headers["Authorization"] = "Basic b3BzbWFuOg=="
+	headers["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8"
+
+	// Add Parameter / header values for URL for authentication
+	if isClientIDBeingUsed() {
+		parameters.Add("grant_type", "client_credentials")
+		headers["Authorization"] = "Basic " + basicAuth()
+	} else {
+		parameters.Add("grant_type", "password")
+		parameters.Add("username", cmdOptions.OpsManUsername)
+		parameters.Add("password", cmdOptions.OpsManPassword)
+		headers["Authorization"] = "Basic b3BzbWFuOg=="
+	}
+	URL.RawQuery = parameters.Encode()
 
 	// Fetch the authentication data
-	content, err := get(URL.String(), headers)
+	var content []byte
+	if isClientIDBeingUsed() {
+		content, err = post(URL.String(), headers)
+	} else {
+		content, err = get(URL.String(), headers)
+	}
 	if err != nil {
 		return IncrementErrorCounter(fmt.Sprintf("error during token extraction: %v", err))
 	}
@@ -111,7 +128,6 @@ func (m *MetricsCollector) authenticate() error {
 		return IncrementErrorCounter(fmt.Sprintf("error in json unmarshal of uaa response: %v", err))
 
 	}
-
 	return nil
 }
 
@@ -126,4 +142,18 @@ func (m *MetricsCollector) opsmanRequestHandler() ([]byte, error) {
 
 	// Fetch the data
 	return get(m.OpsManCertificateListUrl, headers)
+}
+
+// Is this client id and client secret request
+func isClientIDBeingUsed() bool {
+	if cmdOptions.OpsManUsername == "" {
+		return true
+	}
+	return false
+}
+
+// Basic Auth Encoder
+func basicAuth() string {
+	auth := cmdOptions.OpsManClientID + ":" + cmdOptions.OpsManClientSecret
+	return base64.StdEncoding.EncodeToString([]byte(auth))
 }

@@ -14,30 +14,34 @@ var (
 
 // Root command line options
 type Command struct {
-	Debug          bool
-	Environment    string
-	Port           int
-	OpsManHostname string
-	OpsManUsername string
-	OpsManPassword string
-	Interval       int
-	SkipSsl        bool
-	CACertFile     string
+	Debug              bool
+	Environment        string
+	Port               int
+	OpsManHostname     string
+	OpsManUsername     string
+	OpsManPassword     string
+	OpsManClientID     string
+	OpsManClientSecret string
+	Interval           int
+	SkipSsl            bool
+	CACertFile         string
 }
 
 // Defaults
 const (
-	defaultInterval   = 86400 // 1 day
-	defaultPort       = 8080
-	envDebug          = "DEBUG"
-	envSslSkip        = "SKIP_SSL_VALIDATION"
-	envInterval       = "INTERVAL"
-	envPort           = "PORT"
-	envOpsManUrl      = "OPSMAN_URL"
-	envOpsManUserName = "OPSMAN_USERNAME"
-	envOpsManPassword = "OPSMAN_PASSWORD"
-	envEnvironment    = "ENVIRONMENT"
-	envCaCertFile     = "CACERTFILE"
+	defaultInterval       = 86400 // 1 day
+	defaultPort           = 8080
+	envDebug              = "DEBUG"
+	envSslSkip            = "SKIP_SSL_VALIDATION"
+	envInterval           = "INTERVAL"
+	envPort               = "PORT"
+	envOpsManUrl          = "OPSMAN_URL"
+	envOpsManUserName     = "OPSMAN_USERNAME"
+	envOpsManPassword     = "OPSMAN_PASSWORD"
+	envOpsManClientID     = "OPSMAN_CLIENT_ID"
+	envOpsManClientSecret = "OPSMAN_CLIENT_SECRET"
+	envEnvironment        = "ENVIRONMENT"
+	envCaCertFile         = "CACERTFILE"
 )
 
 // The root commands.
@@ -63,7 +67,6 @@ var rootCmd = &cobra.Command{
 // Set defaults of values of fields that are missed by the user
 func setDefaultsOrErrorIfMissing() {
 	suffixText := "is a required flag and its missing"
-	// TODO: no need for interval set the grafana dashboard to 1 day to refresh
 	if cmdOptions.Interval == 0 { // Interval
 		cmdOptions.Interval = defaultInterval
 	}
@@ -72,12 +75,6 @@ func setDefaultsOrErrorIfMissing() {
 	}
 	if cmdOptions.OpsManHostname == "" { // ops man url
 		Fatalf("Operation manager URL %s", suffixText)
-	}
-	if cmdOptions.OpsManUsername == "" { // ops man username
-		Fatalf("Operation manager Username %s", suffixText)
-	}
-	if cmdOptions.OpsManPassword == "" { // ops man password
-		Fatalf("Operation manager Password %s", suffixText)
 	}
 	if cmdOptions.Environment == "" { // environment
 		Fatalf("Environment %s", suffixText)
@@ -91,6 +88,26 @@ func setDefaultsOrErrorIfMissing() {
 			Fatalf("Invalid URL (%s), err: %v", cmdOptions.OpsManHostname, err)
 		}
 		cmdOptions.OpsManHostname = u.Host
+	}
+	authenticationChecker(suffixText)
+}
+
+// Check what kind of authentication is being used.
+func authenticationChecker(msg string) {
+	if cmdOptions.OpsManUsername == "" && cmdOptions.OpsManClientID == "" { // ops man username
+		Fatalf("Operation manager username or client ID %s", msg)
+	}
+	if cmdOptions.OpsManPassword == "" && cmdOptions.OpsManClientID == "" { // ops man password
+		Fatalf("Operation manager password or client secret %s", msg)
+	}
+	if cmdOptions.OpsManClientID == "" && cmdOptions.OpsManUsername == "" { // client id
+		Fatalf("Operation manager client id or username %s", msg)
+	}
+	if cmdOptions.OpsManClientSecret == "" && cmdOptions.OpsManUsername == "" { // ops man password
+		Fatalf("Operation manager client secret or password %s", msg)
+	}
+	if cmdOptions.OpsManUsername != "" && cmdOptions.OpsManClientID != "" { // cannot have both
+		Fatalf("choose either username / password or client id / client secret, cannot have both of them together")
 	}
 }
 
@@ -113,10 +130,16 @@ func init() {
 		"[required] provide the hostname or IP address of the ops manager url. Environment Variable: "+envOpsManUrl)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.OpsManUsername, "opsman-username", "u",
 		viper.GetString(envOpsManUserName),
-		"[required] provide the username to connect to ops manager. Environment Variable: "+envOpsManUserName)
+		"[required if you have setup user using UAAC USER] provide the username to connect to ops manager. Environment Variable: "+envOpsManUserName)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.OpsManPassword, "opsman-password", "w",
 		viper.GetString(envOpsManPassword),
-		"[required] provide the password to connect to ops manager. Environment Variable: "+envOpsManPassword)
+		"[required if you have setup user using UAAC USER] provide the password to connect to ops manager. Environment Variable: "+envOpsManPassword)
+	rootCmd.PersistentFlags().StringVarP(&cmdOptions.OpsManClientID, "opsman-client-id", "n",
+		viper.GetString(envOpsManClientID),
+		"[required if you have setup user using UAAC CLIENT] provide the username to connect to ops manager. Environment Variable: "+envOpsManClientID)
+	rootCmd.PersistentFlags().StringVarP(&cmdOptions.OpsManClientSecret, "opsman-client-secret", "s",
+		viper.GetString(envOpsManClientSecret),
+		"[required if you have setup user using UAAC CLIENT] provide the password to connect to ops manager. Environment Variable: "+envOpsManClientSecret)
 	rootCmd.PersistentFlags().StringVarP(&cmdOptions.Environment, "environment", "e",
 		viper.GetString(envEnvironment),
 		"[required] provide the environment name for this foundation. Environment Variable: "+envEnvironment)
