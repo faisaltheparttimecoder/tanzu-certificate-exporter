@@ -27,6 +27,9 @@ uaac token owner get opsman admin -s "" -p <PASSWORD>
 # Create a new read only user and assign a read permission
 uaac user add prometheus-cert-exporter -p prometheus-cert-exporter-password --emails prometheus-cert-exporter@prometheus.com
 uaac member add opsman.restricted_view prometheus-cert-exporter
+
+# If you are using SAML to authenticate user on opsmanager, then you need to setup a UAAC read only client instead of a read only user mentioned above
+uaac client add prometheus-cert-exporter -s prometheus-cert-exporter-secret --scope opsman.restricted_view --authorized_grant_types client_credentials --authorities opsman.restricted_view
 ```
 
 ## Deployment to Cloud Foundry
@@ -42,7 +45,6 @@ cd tanzu-certificate-exporter
 vi manifest
 
 # if you are want use https connection b/w API request make sure you set appropriate value in the manifest for
-
 SKIP_SSL_VALIDATION: false
 CACERTFILE: "certificate-file-name"
 
