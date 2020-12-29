@@ -1,18 +1,20 @@
 ---
 applications:
-- name: vmware-tanzu-cert-exporter
-  memory: 512M
-  disk_quota: 256M
-  instances: 1
-  buildpacks: [go_buildpack]
-  env:
-    GOVERSION: go1.13
-    GOPACKAGENAME: bin/vmware-tanzu-cert-exporter
-    DEBUG: false                                          # Enable for debug loggin
-    INTERVAL: 3600                                        # Time interval in seconds after which it refresh the cache
-    OPSMAN_URL: https://<OPSMAN-URL>/                     # The URL of the ops manager
-    OPSMAN_USERNAME: prometheus-cert-exporter             # Read only username that can read the opsman API
-    OPSMAN_PASSWORD: prometheus-cert-exporter-password    # Password to access the opsman API
-    ENVIRONMENT: <ENV_NAME>                               # Arbitrary name to identify the env
-    SKIP_SSL_VALIDATION: true                             # Skip SSL Validation
-    CACERTFILE:  "server.crt"                             # CA Cert Filename to connect to the above OPSMAN_URL, the file should on the root directory when doing cf PUSH
+  - name: vmware-tanzu-cert-exporter
+    memory: 512M
+    disk_quota: 256M
+    instances: 1
+    buildpacks: [go_buildpack]
+    env:
+      GOVERSION: go1.13
+      GOPACKAGENAME: bin/vmware-tanzu-cert-exporter
+      DEBUG: false                                          # Enable for debug loggin
+      INTERVAL: 3600                                        # Time interval in seconds after which it refresh the cache
+      OPSMAN_URL: https://<OPSMAN-URL>/                     # The URL of the ops manager
+      OPSMAN_USERNAME: prometheus-cert-exporter             # Read only username that can read the opsman API (blank if client id / secret is used)
+      OPSMAN_PASSWORD: prometheus-cert-exporter-password    # Password to access the opsman API (blank if client id / secret is used)
+      OPSMAN_CLIENT_ID: prometheus-cert-exporter            # Ops manger Client ID (blank if username / password is used )
+      OPSMAN_CLIENT_SECRET: prometheus-cert-exporter-secret # Ops manger Client Secret (blank if username / password is used )
+      ENVIRONMENT: <ENV_NAME>                               # Arbitrary name to identify the env
+      SKIP_SSL_VALIDATION: true                             # Skip SSL Validation
+      CACERTFILE:  "server.crt"                             # CA Cert Filename to connect to the above OPSMAN_URL, the file should on the root directory when doing cf PUSH
